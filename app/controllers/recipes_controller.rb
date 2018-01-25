@@ -2,13 +2,18 @@ class RecipesController < ApplicationController
   def index
     search_term = params[:search]
     recipes = Recipe.all
+    sort_by = params[:sort]
     if search_term
       recipes = recipes.where("chef iLIKE ? OR ingredients iLIKE ?",
                                 "%#{search_term}%",
                                 "%#{search_term}%")
     end
 
-    render json: recipes.as_json   
+    if sort_by
+      recipes = recipes.order("#{sort_by}") 
+    end
+    
+    render json: recipes.as_json  
   end
 
   def create
