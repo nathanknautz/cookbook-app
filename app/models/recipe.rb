@@ -22,15 +22,4 @@ class Recipe < ApplicationRecord
     created_at.strftime("%b %d, %Y")
   end
 
-  def as_json
-    {
-    title: title,
-    chef: chef,
-    ingredients: ingredients_list,
-    directions: directions_list,
-    created_at: friendly_created_at,
-    prep_time: friendly_prep_time
-    }  
-  end
-
 end
