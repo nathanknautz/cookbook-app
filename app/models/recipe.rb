@@ -1,4 +1,5 @@
 class Recipe < ApplicationRecord
+  validates :title, presence: true
   belongs_to :user
   has_many :category_recipes
   has_many :categories, through: :category_recipes

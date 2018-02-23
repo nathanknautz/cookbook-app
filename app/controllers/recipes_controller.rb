@@ -1,4 +1,5 @@
 class RecipesController < ApplicationController
+  before_action :authenticate_user, only: [:create]
   def index
     search_term = params[:search]
     @recipes = Recipe.all
@@ -21,7 +22,9 @@ class RecipesController < ApplicationController
                         title: params[:title],
                         user_id: current_user.id,
                         ingredients: params[:ingredients],
-                        directions: params[:directions])
+                        directions: params[:directions],
+                        prep_time: params[:prep_time],
+                        image_url: params[:image_url])
     @recipe.save 
     render 'show.json.jbuilder'
   end
@@ -34,12 +37,16 @@ class RecipesController < ApplicationController
   def update
     @recipe = Recipe.find(params[:id]) 
     @recipe.title = params[:title] || @recipe.title
-    @recipe.chef = params[:chef] || @recipe.chef
+    #@recipe.chef = params[:chef] || @recipe.chef
     @recipe.ingredients = params[:ingredients] || @recipe.ingredients
     @recipe.directions = params[:directions] || @recipe.directions
     @recipe.prep_time = params[:prep_time] || @recipe.prep_time
-    @recipe.save
-    render 'show.json.jbuilder'
+    @recipe.image_url = params[:image_url] || @recipe.image_url
+    if @recipe.save
+      render 'show.json.jbuilder'
+    else
+      puts @recipe.errors.full_messages
+    end
   end
 
   def destroy
